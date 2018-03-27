@@ -15,14 +15,12 @@
       <!--  <img src="../static/png/greywolf.jpg" v-show="isshow"/>-->
       <img :src="imgsrc" v-show="isshow" class="imgstyle"/>
     </div>
-
+    <mt-button type="primary" size="large" @click.native="submit">提交</mt-button>
   </div>
 </template>
 
 <script>
   import axios from 'axios'
-  import '../assets/ajaxfileupload.js'
-
   export default {
     name: "",
     data() {
@@ -51,25 +49,41 @@
         reader.onload = (e)=>{
           this.imgsrc=e.target.result
           this.isshow=true
-        };
-        axios.post({
-          url: '/',
+        }
+      },
+      submit: function () {
+        axios(
           {
-            params: {
-              img: this.imgsrc
+            url: 'http://localhost/wechat_meilian/suggestion/addSugg',
+            method: 'post',
+            data: {
+              img: this.imgsrc,
+              title: this.title,
+              content: this.content,
+              userid: 1
             }
           }
-        }).then(response=>{
-            if(response.status === "200"){
-                let data = response.data;
-            }
+        ).then(response=>{
+          if(response.status === "200"){
+            let data = response.data;
+            this.$toast({
+              message: '操作成功',
+              iconClass: 'icon icon-happy2'
+            });
+          }else{
+            this.$toast({
+              className: 'errormsg',
+              message: '操作失败',
+              iconClass: 'icon icon-sad2'
+            });
+          }
         })
       }
     }
   }
 </script>
 
-<style scoped>
+<style >
   .imgcontainer {
     width: 100%;
     min-height: 100px;
@@ -82,5 +96,8 @@
   }
   .suggest {
     text-align: left
+  }
+  .errormsg{
+    color: rgba(255, 24, 33, 0.97) !important;
   }
 </style>
