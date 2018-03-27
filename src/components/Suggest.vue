@@ -1,0 +1,86 @@
+<template>
+  <div class="suggest">
+    <mt-header title="请输入标题"></mt-header>
+    <mt-field placeholder="请输入标题" type="input" v-model="title"></mt-field>
+    <mt-header title="请输入内容"></mt-header>
+    <mt-field placeholder="自我介绍" type="textarea" rows="4" v-model="suggest"></mt-field>
+    <mt-header title="上传图片"></mt-header>
+
+    <form action="" style="display:none">
+      <input type="file" id="upfile" @change="fileclick">
+    </form>
+
+    <mt-button type="primary" @click.native="handleClick">选择照片</mt-button>
+    <div class="imgcontainer">
+      <!--  <img src="../static/png/greywolf.jpg" v-show="isshow"/>-->
+      <img :src="imgsrc" v-show="isshow" class="imgstyle"/>
+    </div>
+
+  </div>
+</template>
+
+<script>
+  import axios from 'axios'
+  import '../assets/ajaxfileupload.js'
+
+  export default {
+    name: "",
+    data() {
+      return {
+        title: "",
+        suggest: "",
+        imgsrc: "",
+        isshow: false
+      }
+    },
+    methods: {
+      handleClick: function () {
+        var file = document.getElementById("upfile")
+        // console.log($("#upfile"))
+        file.click();
+      },
+      fileclick: function (event) {
+        let file = $("#upfile")[0].files[0];
+        if(!/image\/\w+/.test(file.type)){
+          alert("看清楚，这个需要图片！");
+          return false;
+        }
+        var reader = new FileReader();
+        //将文件以Data URL形式读入页面
+        reader.readAsDataURL(file);
+        reader.onload = (e)=>{
+          this.imgsrc=e.target.result
+          this.isshow=true
+        };
+        axios.post({
+          url: '/',
+          {
+            params: {
+              img: this.imgsrc
+            }
+          }
+        }).then(response=>{
+            if(response.status === "200"){
+                let data = response.data;
+            }
+        })
+      }
+    }
+  }
+</script>
+
+<style scoped>
+  .imgcontainer {
+    width: 100%;
+    min-height: 100px;
+    background-color: rgba(198, 217, 46, 0.22);
+    text-align: center;
+  }
+  .imgstyle{
+    width: 100%;
+    min-height: 100px;
+  }
+  .suggest {
+    text-align: left
+  }
+</style>
