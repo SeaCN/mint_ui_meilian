@@ -3,7 +3,7 @@
     <mt-header title="请输入标题"></mt-header>
     <mt-field placeholder="请输入标题" type="input" v-model="title"></mt-field>
     <mt-header title="请输入内容"></mt-header>
-    <mt-field placeholder="自我介绍" type="textarea" rows="4" v-model="suggest"></mt-field>
+    <mt-field placeholder="请输入内容" type="textarea" rows="4" v-model="content"></mt-field>
     <mt-header title="上传图片"></mt-header>
 
     <form action="" style="display:none">
@@ -26,7 +26,7 @@
     data() {
       return {
         title: "",
-        suggest: "",
+        content: "",
         imgsrc: "",
         isshow: false
       }
@@ -52,6 +52,21 @@
         }
       },
       submit: function () {
+        //验证输入是否合法
+        if(!(this.title && $.trim(this.title).length != 0)){
+          this.$toast({
+            className: 'errormsg',
+            message: '请输入标题'
+          });
+          return false;
+        }
+        if(!(this.content && $.trim(this.content).length != 0)){
+          this.$toast({
+            className: 'errormsg',
+            message: '请输入内容'
+          });
+          return false;
+        }
         axios(
           {
             url: 'http://localhost/wechat_meilian/suggestion/addSugg',
@@ -63,10 +78,11 @@
               userid: 1
             }
           }
-        ).then(response=>{
-          if(response.status === "200"){
+        ).then(response=>{console.log(response)
+          if(response.status === 200){
             let data = response.data;
             this.$toast({
+              className: 'successmsg',
               message: '操作成功',
               iconClass: 'icon icon-happy2'
             });
@@ -98,6 +114,9 @@
     text-align: left
   }
   .errormsg{
-    color: rgba(255, 24, 33, 0.97) !important;
+    color: rgba(255, 107, 98, 0.97) !important;
+  }
+  .successmsg{
+    color: #5daf34;
   }
 </style>
