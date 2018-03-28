@@ -10,7 +10,7 @@
       infinite-scroll-disabled="loading"
       infinite-scroll-distance="10">
       <mt-tab-container-item id="1">
-        <mt-cell v-for="item in list" :title='item.title'>
+        <mt-cell v-for="item in list" :title='item.title' is-link>
         </mt-cell>
         <mt-cell v-show="isshow">
           正在获取更多<mt-spinner :type="0"></mt-spinner>
