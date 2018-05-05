@@ -37,7 +37,7 @@
               this.$router.go(-1)
             }else {
               this.$toast({
-                message: '操作成功',
+                message: '操作失败',
                 duration: 1500,
                 className: 'errorClass'
               })

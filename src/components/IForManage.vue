@@ -5,11 +5,11 @@
       <mt-tab-item id="2">历史回复</mt-tab-item>
     </mt-navbar>
 
-    <mt-tab-container v-model="selected"
-          v-infinite-scroll="loadMore"
-          infinite-scroll-disabled="loading"
-          infinite-scroll-distance="10">
-      <mt-tab-container-item id="1">
+    <mt-tab-container >
+      <mt-tab-container-item id="1" v-model="selected"
+                             v-infinite-scroll="loadMore"
+                             infinite-scroll-disabled="loading"
+                             infinite-scroll-distance="10">
         <mt-cell-swipe
           :right="[
             {
@@ -29,7 +29,9 @@
 
       </mt-tab-container-item>
       <mt-tab-container-item id="2">
-        <mt-cell title="1"></mt-cell>
+<!--        <mt-cell v-for="item in flist" :key="item.id" : title="item.title" :label="item.createTime" @click.native="fcellclick">
+
+        </mt-cell>-->
       </mt-tab-container-item>
     </mt-tab-container>
 
@@ -45,6 +47,7 @@
       return {
         selected: "1",
         list: [],
+        flist: [],
         isshow: false,
         dynamicDiv: {},
         currentPage: 1,
@@ -74,7 +77,6 @@
             success: (response)=> {
               if(response.data.length != 0){
                 this.list = this.list.concat(response.data)
-                console.log(this.list)
               }else{
                 this.toEnd = true
                 this.$toast({
@@ -105,7 +107,10 @@
         closeA.append(this.dynamicDiv)
         this.dynamicDiv.fadeIn(1000)
       },
-      reply: function () {console.log(event.target)
+      fcellclick: function(e){
+
+      },
+      reply: function () {
         let closeA = $(event.target).closest('a.mint-cell')
         let itemid = closeA.find('#itemId').val()
         this.$router.push({path: 'Reply', query: {suggesstionid: itemid}})
