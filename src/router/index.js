@@ -4,6 +4,7 @@ import IForManage from '@/components/IForManage'
 import Suggest from '@/components/Suggest'
 import test from '@/components/test'
 import Reply from '@/components/Reply'
+import AdminPage from '@/components/AdminPage'
 
 Vue.use(Router)
 
@@ -25,6 +26,10 @@ export default new Router({
       path: '/Reply',
       name: 'Reply',
       component: Reply
+    }, {
+      path: '/AdminPage',
+      name: 'AdminPage',
+      component: AdminPage
     }
   ]
 })

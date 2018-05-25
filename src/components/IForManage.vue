@@ -24,7 +24,7 @@
           <input id="itemId" type="hidden" v-model="item.id">
         </mt-cell-swipe>
         <mt-cell v-show="isshow">
-          正在获取更多<mt-spinner :type="0"></mt-spinner>
+          正在获取更多<mt-spinner :type="2"></mt-spinner>
         </mt-cell>
 
       </mt-tab-container-item>
