@@ -20,7 +20,7 @@
         subFB: function () {
           this.$indicator.open();
           axios.post(
-            Constant.path + 'wechat_meilian/feedback/addFeedback',
+            Constant.path + '/feedback/addFeedback',
             {
                 suggestionid: this.suggestionId,
                 content: this.fbcontent,

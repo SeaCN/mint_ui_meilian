@@ -29,9 +29,9 @@
 
       </mt-tab-container-item>
       <mt-tab-container-item id="2">
-<!--        <mt-cell v-for="item in flist" :key="item.id" : title="item.title" :label="item.createTime" @click.native="fcellclick">
+        <!--        <mt-cell v-for="item in flist" :key="item.id" : title="item.title" :label="item.createTime" @click.native="fcellclick">
 
-        </mt-cell>-->
+                </mt-cell>-->
       </mt-tab-container-item>
     </mt-tab-container>
 
@@ -66,7 +66,7 @@
         setTimeout(() => {
           //查询数据库
           $.ajax({
-            url: Constant.path + "wechat_meilian/suggestion/suggestionByPage",
+            url: Constant.path + "/suggestion/suggestionByPage",
             data: {
               currentPage: ++this.currentPage,
               pageSize: this.pageSize
@@ -107,9 +107,9 @@
         closeA.append(this.dynamicDiv)
         this.dynamicDiv.fadeIn(1000)
       },
-      fcellclick: function(e){
+      /*      fcellclick: function(e){
 
-      },
+            },*/
       reply: function () {
         let closeA = $(event.target).closest('a.mint-cell')
         let itemid = closeA.find('#itemId').val()
@@ -122,7 +122,7 @@
       this.dynamicDiv.slideUp()
       //初始化数据，读取数据库
       $.ajax({
-        url: Constant.path + 'wechat_meilian/suggestion/suggestionByPage',
+        url: Constant.path + '/suggestion/suggestionByPage',
         type: 'POST',
         async: false,
         dataType: 'json',
@@ -132,6 +132,7 @@
         success: (response)=>{
           if(response.code === "200"){
             this.list = response.data
+            console.log(this.list)
           }
         }
       })
@@ -155,8 +156,8 @@
   .hello{
     text-align: left;
   }
-  .over{
-    font-family: 04b_21;
-    color: #6eff2a !important;
-  }
+  /*  .over{
+      font-family: 04b_21;
+      color: #6eff2a !important;
+    }*/
 </style>

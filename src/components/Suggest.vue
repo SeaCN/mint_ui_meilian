@@ -20,6 +20,7 @@
 </template>
 
 <script>
+  import Constant from '../assets/constant.js'
   import axios from 'axios'
   export default {
     name: "",
@@ -69,7 +70,7 @@
         }
         axios(
           {
-            url: 'http://localhost/wechat_meilian/suggestion/addSugg',
+            url: Constant.path + '/suggestion/addSugg',
             method: 'post',
             data: {
               img: this.imgsrc,
@@ -81,11 +82,19 @@
         ).then(response=>{console.log(response)
           if(response.status === 200){
             let data = response.data;
-            this.$toast({
-              className: 'successmsg',
-              message: '操作成功',
-              iconClass: 'icon icon-happy2'
-            });
+            if(data.code == 200){
+              this.$toast({
+                className: 'successmsg',
+                message: '操作成功',
+                iconClass: 'icon icon-happy2'
+              });
+            }else{
+              this.$toast({
+                className: 'errormsg',
+                message: '操作失败',
+                iconClass: 'icon icon-sad2'
+              });
+            }
           }else{
             this.$toast({
               className: 'errormsg',
