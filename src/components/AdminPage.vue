@@ -5,8 +5,8 @@
       <mt-tab-item id="2">历史回复</mt-tab-item>
     </mt-navbar>
     <mt-tab-container v-model="selected">
-      <mt-tab-container-item v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-        <mt-cell-swipe v-for="item in list" :key='item.id' :title="item.title" :label="item.createTime"
+      <mt-tab-container-item id="1" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+        <mt-cell-swipe v-for="item in list" :key='item.id' :label="item.createTime"
           @click.native="showDetail"
           :right="[{
             content: '回复',
@@ -14,6 +14,9 @@
             handler: reply
           }]"
         >
+          <template slot="title">
+            <span class="stitle">{{item.title}}</span>
+          </template>
           <input id="itemC" type="hidden" v-model="item.content">
           <input id="itemI" type="hidden" v-model="item.img">
           <input id="itemId" type="hidden" v-model="item.id">
@@ -23,9 +26,10 @@
         </mt-cell>
 
       </mt-tab-container-item>
-    </mt-tab-container>
-    <mt-tab-container v-model="selected">
-        12
+
+      <mt-tab-container-item id="2">
+        123
+      </mt-tab-container-item>
     </mt-tab-container>
   </div>
 </template>
@@ -136,9 +140,9 @@
 </script>
 
 <style scoped>
-/*  .mint-tab-container{
+  .mint-tab-container{
     margin-top: 46px!important;
-  }*/
+  }
   .hello{
     text-align: left;
   }
@@ -146,5 +150,8 @@
     color: #2dbe60;
     font-size: 15px;
     font-style: oblique;
+  }
+  .stitle{
+    font-size: 15px;
   }
 </style>
