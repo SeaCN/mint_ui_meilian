@@ -6,7 +6,8 @@
     </mt-navbar>
     <mt-tab-container v-model="selected">
       <mt-tab-container-item id="1" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-        <mt-cell-swipe v-for="item in list" :key='item.id' :label="item.createTime"
+        <mt-cell-swipe v-for="item in list" :key='item.id'
+         :title="item.title" :label="item.createTime"
           @click.native="showDetail"
           :right="[{
             content: '回复',
@@ -14,9 +15,7 @@
             handler: reply
           }]"
         >
-          <template slot="title">
-            <span class="stitle">{{item.title}}</span>
-          </template>
+
           <input id="itemC" type="hidden" v-model="item.content">
           <input id="itemI" type="hidden" v-model="item.img">
           <input id="itemId" type="hidden" v-model="item.id">
@@ -28,7 +27,21 @@
       </mt-tab-container-item>
 
       <mt-tab-container-item id="2">
-        123
+        <mt-tab-container-item id="1" v-infinite-scroll="fbloadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+          <mt-cell-swipe v-for="item in fblist" :key='item.id'
+                         :title="item.title" :label="item.createTime"
+                         @click.native="fbshowDetail"
+          >
+
+            <input id="itemCC" type="hidden" v-model="item.content">
+            <input id="itemII" type="hidden" v-model="item.img">
+  <!--          <input id="itemIId" type="hidden" v-model="item.id">-->
+          </mt-cell-swipe>
+          <mt-cell v-show="isshow">
+            <span class="loadingfont">正在获取更多</span><mt-spinner :type="2"></mt-spinner>
+          </mt-cell>
+
+        </mt-tab-container-item>
       </mt-tab-container-item>
     </mt-tab-container>
   </div>
@@ -42,15 +55,24 @@
       data() {
         return {
           loading: false,
+          fbloading: false,
           selected : "1",
           list: [
 
           ],
+          fblist: [
+
+          ],
           isshow: false,
+          fbisshow: false,
           dynamicDiv: {},
+          fbdynamicDiv: {},
           currentPage: 1,
+          fbcurrentPage: 0,
           pageSize: 10,
-          toEnd: false
+          fbpageSize: 10,
+          toEnd: false,
+          fbtoEnd: false
         }
       },
       methods:{
@@ -65,6 +87,19 @@
           setTimeout(() => {
             this.getSuggs();
             this.loading = false;
+          }, 1000);
+        },
+        fbloadMore: function() {
+          this.fbloading = true;
+          if (this.fbtoEnd){
+            this.fbisshow = false;
+            return;
+          }else{
+            this.fbisshow = true
+          }
+          setTimeout(() => {
+            this.getFbs();
+            this.fbloading = false;
           }, 1000);
         },
         /*获取建议列表*/
@@ -84,6 +119,33 @@
                 this.list = this.list.concat(response.data)
               }else{
                 this.toEnd = true
+                this.$toast({
+                  message: '暂无数据',
+                  duration: 2000,
+                  className: "over"
+                });
+              }
+            }
+          })
+        },
+        /*获取回复*/
+        getFbs: function(){
+          //查询数据库
+          $.ajax({
+            url: Constant.path + "/feedback/selectByUserid",
+            data: {
+              currentPage: ++this.fbcurrentPage,
+              pageSize: this.fbpageSize,
+              userId: 1
+            },
+            type: "post",
+            dataType: "json",
+            async: false,
+            success: (response)=> {
+              if(response.data.length != 0){console.log(response.data)
+                this.fblist = this.fblist.concat(response.data)
+              }else{
+                this.fbtoEnd = true
                 this.$toast({
                   message: '暂无数据',
                   duration: 2000,
@@ -113,6 +175,22 @@
           this.dynamicDiv.find('p').after($("<p><img src='" + imgdata +"'/></p>"))
           closeA.append(this.dynamicDiv)
           this.dynamicDiv.fadeIn(1000)
+        },
+        fbShowDetail: function (e) {
+          let closeA = $(e.target).closest('a.mint-cell')
+          if(closeA.find('div.animateDiv').length !== 0
+            && closeA.find('div.animateDiv').css('display') != 'none'){
+            this.fbdynamicDiv.hide()
+            return;
+          }
+          this.fbdynamicDiv.hide()
+          this.fbdynamicDiv.html("")
+          this.fbdynamicDiv.append($('<p></p>'))
+          this.fbdynamicDiv.find('p').html(closeA.find('#itemCC').val())
+          let imgdata = closeA.find('#itemII').val()
+          this.fbdynamicDiv.find('p').after($("<p><img src='" + imgdata +"'/></p>"))
+          closeA.append(this.fbdynamicDiv)
+          this.fbdynamicDiv.fadeIn(1000)
         }
       },
       created: function () {
@@ -131,7 +209,7 @@
           success: (response)=>{
             if(response.code === "200"){
               this.list = response.data
-              console.log(this.list)
+              //console.log(this.list)
             }
           }
         })
