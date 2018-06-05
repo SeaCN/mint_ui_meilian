@@ -1,25 +1,24 @@
 <template>
   <div class="suggest">
-    <mt-header title="请输入标题"></mt-header>
-    <mt-field placeholder="请输入标题" type="input" v-model="title"></mt-field>
-    <mt-header title="请输入内容"></mt-header>
-    <mt-field placeholder="请输入内容" type="textarea" rows="4" v-model="content"></mt-field>
-    <mt-header title="上传图片"></mt-header>
+    <!--<mt-header title="请输入标题"></mt-header>-->
+    <mt-field  type="input" v-model="title" label="标题"></mt-field>
+    <!--<mt-header title="请输入内容"></mt-header>-->
+    <mt-field  type="textarea" rows="6" v-model="content" label="内容"></mt-field>
+    <!--<mt-header title="上传图片"></mt-header>-->
 
     <form action="" style="display:none">
       <input type="file" id="upfile" @change="fileclick">
     </form>
 
-    <mt-button type="primary" @click.native="handleClick">选择照片</mt-button>
     <div class="imgcontainer">
-      <!--  <img src="../static/png/greywolf.jpg" v-show="isshow"/>-->
-      <img :src="imgsrc" v-show="isshow" class="imgstyle"/>
+      <img :src="imgsrc" v-show="isshow" class="imgstyle" @click="handleClick"/>
     </div>
     <mt-button type="primary" size="large" @click.native="submit">提交</mt-button>
   </div>
 </template>
 
 <script>
+  import upload from '../assets/upload.png'
   import Constant from '../assets/constant.js'
   import axios from 'axios'
   export default {
@@ -28,8 +27,8 @@
       return {
         title: "",
         content: "",
-        imgsrc: "",
-        isshow: false
+        imgsrc: upload,
+        isshow: true
       }
     },
     methods: {
@@ -79,7 +78,7 @@
               userid: 1
             }
           }
-        ).then(response=>{console.log(response)
+        ).then(response=>{
           if(response.status === 200){
             let data = response.data;
             if(data.code == 200){
@@ -111,16 +110,16 @@
 <style >
   .imgcontainer {
     width: 100%;
-    min-height: 100px;
-    background-color: rgba(198, 217, 46, 0.22);
+    /*background-color: rgba(198, 217, 46, 0.22);*/
     text-align: center;
   }
   .imgstyle{
-    width: 100%;
-    min-height: 100px;
+    width: 80%;
+ /*   min-height: 100px;*/
   }
   .suggest {
-    text-align: left
+    text-align: left;
+    margin-top: 50px;
   }
   .errormsg{
     color: rgba(255, 107, 98, 0.97) !important;
