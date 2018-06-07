@@ -12,11 +12,11 @@ Vue.use(Router)
 export default new Router({
   // mode: 'history',
   routes: [
-/*    {
+    {
       path: '/',
       name: 'test',
       component: test
-    },*/ {
+    }, {
       path: '/Suggest',
       name: 'Suggest',
       component: Suggest
@@ -25,7 +25,7 @@ export default new Router({
       name: 'Reply',
       component: Reply
     }, {
-      path: '/',
+      path: '/AdminPage',
       name: 'AdminPage',
       component: AdminPage
     }, {
