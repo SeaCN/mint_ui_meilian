@@ -9,6 +9,7 @@
     <form action="" style="display:none">
       <input type="file" id="upfile" @change="fileclick">
     </form>
+    <!--录音-->
 
     <div class="imgcontainer">
       <img :src="imgsrc" v-show="isshow" class="imgstyle" @click="handleClick"/>
@@ -20,7 +21,8 @@
 <script>
   import upload from '../assets/upload.png'
   import Constant from '../assets/constant.js'
-  import axios from 'axios'
+  import constant from "../assets/constant";
+  import wx from 'weixin-js-sdk'
   export default {
     name: "",
     data() {
@@ -102,7 +104,47 @@
             });
           }
         })
+      },
+      getConfig: function () {
+        let url = location.href.split("#")[0]//获取锚点之前的链接
+        $.ajax({
+          url: Constant.path + "/jssdk/sign",
+          data:{
+            url : url
+          },
+          method: 'post',
+          async: false,
+          dataType: "json",
+          success: (response)=> {console.log(response)
+            let res = response.data;
+            this.wxInit(res);
+          }
+        })
+      },
+      wxInit: function (res) {
+        let url = location.href.split("#")[0]//获取锚点之前的链接
+        wx.config({
+          debug: false,
+          appId: res.appId,
+          timestamp: res.timestamp,
+          nonceStr: res.noncestr,
+          signature: res.sign,
+          jsApiList: constant.jsApiList
+        });
+
       }
+    },
+    mounted() {
+      this.$nextTick(function () {
+        this.getConfig()
+        wx.ready(function () {
+          alert("success")
+        })
+        wx.error(function(res){
+          console.log(res)
+          alert("error")
+        });
+      })
     }
   }
 </script>

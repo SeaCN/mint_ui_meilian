@@ -5,7 +5,6 @@ import Reply from '@/components/Reply'
 import AdminPage from '@/components/AdminPage'
 import test from '@/components/test'
 import CommonUserPage from '@/components/CommonUserPage'
-import SuggView from '@/components/SuggView'
 
 Vue.use(Router)
 

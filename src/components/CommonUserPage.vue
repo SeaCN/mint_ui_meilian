@@ -165,6 +165,5 @@
   }
   .commonUser{
     text-align: left;
-    overflow: auto
   }
 </style>

@@ -225,6 +225,5 @@
   }
   .hello{
     text-align: left;
-    overflow: auto
   }
 </style>

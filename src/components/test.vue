@@ -29,7 +29,7 @@
       data(){
         return {
           selected: "1",
-          list: [1],
+          list: [1,2,3,4,5,6],
           allLoaded: false,
           autoFill: false
         }
@@ -52,7 +52,7 @@
 <style scoped>
 .hello{
   text-align: left;
-  overflow: auto
+  /*overflow: auto*/
 }
 .mint-tab-container{
   margin-top: 50px!important;
