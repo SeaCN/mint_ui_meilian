@@ -12,15 +12,15 @@
     <div class="imgcontainer">
       <img :src="imgsrc" v-show="isshow" class="imgstyle" @click="handleClick"/>
     </div>
-    <!--录音-->
-    <span class="icon icon-play" @click.native="playAudio"></span>
     <mt-progress :value="progress" :barHeight="5">
       <div slot="start">0%</div>
       <div slot="end">100%</div>
     </mt-progress>
-    {{result}}
-    <mt-button type="primary" size="large" @click.native="start"  plain>开始录音</mt-button>
-    <mt-button type="primary" size="large" @click.native="end"  plain>结束录音</mt-button>
+    <!--播放录音-->
+    <span class="icon icon-play" @click="playAudio"></span>
+
+    <mt-button type="primary" size="large" @touchstart.native="start" @touchend.native="end"  plain>{{voiceText}}</mt-button>
+    <br/>
     <mt-button type="primary" size="large" @click.native="submit">提交</mt-button>
   </div>
 </template>
@@ -47,7 +47,7 @@
         },
         progress: 0,
         progresshandler: {},
-        result: ''
+        voiceText: '按下开始录音'
       }
     },
     methods: {
@@ -140,7 +140,7 @@
       wxInit: function (res) {
         let url = location.href.split("#")[0]//获取锚点之前的链接
         wx.config({
-          debug: true,
+          debug: false,
           appId: res.appId,
           timestamp: res.timestamp,
           nonceStr: res.noncestr,
@@ -150,64 +150,31 @@
 
       },
       /*按下，开始录音*/
-      start: function () {
-        wx.checkJsApi({
-          jsApiList: ['stopRecord'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
-          success: (res)=> {
-            this.result = JSON.stringify(res)
-          }
-        });
-
+      start: function () {this.content="开始录音！"
         event.preventDefault();
-        wx.startRecord({
-          success: ()=> {
-            /*处理进度条问题*/
-            this.progresshandler = setInterval(()=> {
-              this.result="进入progress"
-              this.progress++
-            },600)
-            localStorage.rainAllowRecord = 'true';
-          },
-          cancel: function () {
-            alert('用户拒绝授权录音');
-          },
-          fail: (res)=> {
-            this.result="进入startRecord fail， res:"+JSON.stringify(res)
-          }
-        });
-        /*this.START = new Date().getTime();
+        this.START = new Date().getTime();
         this.recordTimer = setTimeout(()=> {
           wx.startRecord({
             success: ()=> {
-              /!*处理季度条问题*!/
+              this.voiceText = "正在录音..."
+              /*处理季度条问题*/
               this.progresshandler = setInterval(()=> {
-                this.progress++
-              },600)
+                let passedTime = new Date().getTime()-this.START//录音持续的时间
+                this.progress = passedTime/600
+                // this.progress++
+              },200)
               localStorage.rainAllowRecord = 'true';
             },
             cancel: function () {
               alert('用户拒绝授权录音');
             }
           });
-        }, 300);*/
+        }, 300);
       },
       /*松开，停止录音*/
-      end: function () {
+      end: function () {this.content="触发停止！"
         event.preventDefault();
-        wx.stopRecord({
-          success: (res)=> {
-            this.result="进入stopRecord"
-            clearTimeout(this.progresshandler)
-            this.voice.localId = res.localId;
-            this.uploadVoice();
-          },
-          fail: (res)=> {
-            this.result="进入stopRecord fail， res:"+JSON.stringify(res)
-          }
-        });
-        /*this.END = new Date().getTime();
-        clearTimeout(this.progresshandler)
-
+        this.END = new Date().getTime();
         if ((this.END - this.START) < 300) {
           this.END = 0;
           this.START = 0;
@@ -216,18 +183,20 @@
         } else {
           wx.stopRecord({
             success: (res)=> {
+              this.voiceText = "重新录音..."
+              clearTimeout(this.progresshandler)//停止录音进度条
               this.voice.localId = res.localId;
               this.uploadVoice();
             },
             fail: function (res) {
-              alert(JSON.stringify(res));
+                alert(JSON.stringify(res))
             }
           });
-        }*/
+        }
       },
       /*播放录音*/
       playAudio: function () {
-        console.log("begin play...")
+        this.content='begin play...'
         if(this.voice.localId){
           wx.playVoice({
             localId: this.voice.localId // 需要播放的音频的本地ID，由stopRecord接口获得
@@ -261,19 +230,26 @@
     },
     mounted() {
       this.$nextTick(()=> {
-        this.getConfig()
         wx.ready(()=> {
-          this.result="wx.ready"
+          wx.onVoiceRecordEnd({
+            // 录音时间超过一分钟没有停止的时候会执行 complete 回调
+            complete: (res)=> {
+              this.voiceText = "重新录音..."
+              this.voice.localId = res.localId;
+              clearTimeout(this.progresshandler)//停止录音进度条
+            }
+          });
         })
         wx.error((res)=> {
-          this.result="wx.error:"+JSON.stringify(res)
+          this.content="wx.error:"+JSON.stringify(res)
         });
+        this.getConfig()
       })
     }
   }
 </script>
 
-<style>
+<style scoped>
   .imgcontainer {
     width: 100%;
     /*background-color: rgba(198, 217, 46, 0.22);*/
@@ -296,5 +272,8 @@
 
   .successmsg {
     color: #5daf34;
+  }
+  .icon{
+    font-size: 40px;
   }
 </style>
