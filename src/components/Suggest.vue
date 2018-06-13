@@ -17,10 +17,9 @@
       <div slot="end">100%</div>
     </mt-progress>
     <!--播放录音-->
-    <span class="icon icon-play" @click="playAudio"></span>
 
-    <mt-button type="primary" size="large" @touchstart.native="start" @touchend.native="end"  plain>{{voiceText}}</mt-button>
-    <br/>
+    <mt-button type="default" plain size="normal" @touchstart.native="start" @touchend.native="end"> <span class="icon icon-mic"></span>录音 </mt-button>
+    <mt-button type="default" plain size="normal"  @click.native="playAudio"> <span class="icon icon-play2"></span>试听 </mt-button>
     <mt-button type="primary" size="large" @click.native="submit">提交</mt-button>
   </div>
 </template>
@@ -145,7 +144,10 @@
           timestamp: res.timestamp,
           nonceStr: res.noncestr,
           signature: res.sign,
-          jsApiList: constant.jsApiList
+          // jsApiList: constant.jsApiList
+          jsApiList: ['startRecord','stopRecord',
+            'onVoiceRecordEnd','playVoice','pauseVoice','stopVoice',
+            'translateVoice','uploadVoice']
         });
 
       },
@@ -205,27 +207,31 @@
       }
       ,
       uploadVoice: function () {
-        //调用微信的上传录音接口把本地录音先上传到微信的服务器
-        //不过，微信只保留3天，而我们需要长期保存，我们需要把资源从微信服务器下载到自己的服务器
-        /*wx.uploadVoice({
+        //调用微信的上传录音接口把本地录音先上传到微信的服务器,不过，微信只保留3天，而我们需要长期保存，我们需要把资源从微信服务器下载到自己的服务器
+        wx.uploadVoice({
           localId: this.voice.localId, // 需要上传的音频的本地ID，由stopRecord接口获得
           isShowProgressTips: 1, // 默认为1，显示进度提示
           success: function (res) {
             //把录音在微信服务器上的id（res.serverId）发送到自己的服务器供下载。
             $.ajax({
-              url: '后端处理上传录音的接口',
+              url: Constant.path + '/jssdk/getAudio',
               type: 'post',
-              data: JSON.stringify(res),
+              data: res,
               dataType: "json",
               success: function (data) {
-                alert('文件已经保存到七牛的服务器');//这回，我使用七牛存储
+                if(data.code == "200"){
+                  alert("success")
+                }
               },
               error: function (xhr, errorType, error) {
                 console.log(error);
               }
             });
+          },
+          fail: function (res) {
+            alert(JSON.stringify(res))
           }
-        });*/
+        });
       }
     },
     mounted() {
