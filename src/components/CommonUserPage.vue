@@ -121,6 +121,7 @@
         }
       },
       created: function () {
+        this.selected = this.$route.query.selected
         this.dynamicDiv = $('<div class="animateDiv"></div>');
         this.dynamicDiv.css({'display': 'none', 'padding': '0 10px', 'font-style': 'italic', 'font-family': 'arial, sans-serif'})
         this.dynamicDiv.slideUp()

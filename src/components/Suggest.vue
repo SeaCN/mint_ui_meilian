@@ -46,7 +46,8 @@
         },
         progress: 0,
         progresshandler: {},
-        voiceText: '按下开始录音'
+        voiceText: '按下开始录音',
+        wavPath: ''
       }
     },
     methods: {
@@ -89,9 +90,10 @@
             url: Constant.path + '/suggestion/addSugg',
             method: 'post',
             data: {
-              img: this.imgsrc,
               title: this.title,
               content: this.content,
+              img: this.imgsrc,
+              wavPath: this.wavPath,
               userid: 1
             }
           }
@@ -218,9 +220,12 @@
               type: 'post',
               data: res,
               dataType: "json",
-              success: function (data) {
+              xhrFields:{
+                withCredentials: true
+              },
+              success:  (data)=> {
                 if(data.code == "200"){
-                  alert("success")
+                  this.wavPath = data.data.wavPath
                 }
               },
               error: function (xhr, errorType, error) {

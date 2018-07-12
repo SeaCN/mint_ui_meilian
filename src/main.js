@@ -5,10 +5,13 @@ import App from './App'
 import router from './router'
 import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
+import axios from 'axios'
+
+axios.defaults.withCredentials=true;
+Vue.prototype.$ajax = axios
 Vue.use(Mint)
 
 Vue.config.productionTip = false
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

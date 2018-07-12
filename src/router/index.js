@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Suggest from '@/components/Suggest'
 import Reply from '@/components/Reply'
 import AdminPage from '@/components/AdminPage'
+import Regist from '@/components/Regist'
 import test from '@/components/test'
 import CommonUserPage from '@/components/CommonUserPage'
 
@@ -12,7 +13,11 @@ export default new Router({
   // mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/Regist',
+      name: 'Regist',
+      component: Regist
+    },{
+      path: '/test',
       name: 'test',
       component: test
     }, {

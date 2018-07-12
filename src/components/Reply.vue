@@ -7,7 +7,6 @@
 
 <script>
     import Constant from '../assets/constant.js'
-    import axios from 'axios'
     export default {
       name: "",
       data(){

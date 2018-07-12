@@ -1,6 +1,6 @@
 export default {
    // path: 'http://www.devqz.club/meilian_qa',
-  path: 'http://java.devqz.club/meilian_qa',
+  path: 'http://java.devqz.club/meten',
   //   path: '/meilian_qa'
   jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ',
   'onMenuShareWeibo','onMenuShareQZone','chooseImage',
