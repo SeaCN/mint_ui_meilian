@@ -27,7 +27,6 @@
 <script>
   import upload from '../assets/upload.png'
   import Constant from '../assets/constant.js'
-  import constant from "../assets/constant";
   import wx from 'weixin-js-sdk'
 
   export default {
@@ -85,16 +84,18 @@
           });
           return false;
         }
-        axios(
+        $.ajax(
           {
+            xhrFields:{
+              withCredentials:true
+            },
             url: Constant.path + '/suggestion/addSugg',
             method: 'post',
             data: {
               title: this.title,
               content: this.content,
               img: this.imgsrc,
-              wavPath: this.wavPath,
-              userid: 1
+              wavPath: this.wavPath
             }
           }
         ).then(response => {
@@ -125,6 +126,9 @@
       getConfig: function () {
         let url = location.href.split("#")[0]//获取锚点之前的链接
         $.ajax({
+          xhrFields:{
+            withCredentials:true
+          },
           url: Constant.path + "/jssdk/sign",
           data: {
             url: url
@@ -170,7 +174,7 @@
               localStorage.rainAllowRecord = 'true';
             },
             cancel: function () {
-              alert('用户拒绝授权录音');
+              alert('你将无法使用录音功能');
             }
           });
         }, 300);
@@ -216,6 +220,9 @@
           success: function (res) {
             //把录音在微信服务器上的id（res.serverId）发送到自己的服务器供下载。
             $.ajax({
+              xhrFields:{
+                withCredentials:true
+              },
               url: Constant.path + '/jssdk/getAudio',
               type: 'post',
               data: res,
@@ -274,7 +281,6 @@
 
   .suggest {
     text-align: left;
-    margin-top: 50px;
   }
 
   .errormsg {

@@ -1,10 +1,5 @@
 <template>
   <div class="R">
-<!--    <mt-header title="">
-      <router-link to="/" slot="right">
-        <mt-button icon="more">下一步</mt-button>
-      </router-link>
-    </mt-header>-->
     <div id="regist">
       <mt-field placeholder="请输入昵称(字母开头+数字/字母/下划线)" v-model="nickname"></mt-field>
       <mt-button type="default" size="large" @click.native="regist">
@@ -46,7 +41,6 @@
                 })
                 //重定向到原先的访问的页面
                 // this.$router.push(constant.path + this.$route.query.desPath)
-                alert(this.$route.query.desPath)
                 location.href = constant.path + this.$route.query.desPath
               }else {
                 this.$toast({

@@ -56,11 +56,13 @@
         },
         loadPageList:function (){
           $.ajax({
+            xhrFields:{
+              withCredentials:true
+            },
             url: Constant.path + "/feedback/selectByUserid",
             data: {
               currentPage: this.currentPage++,
-              pageSize: this.pageSize,
-              userId: 1
+              pageSize: this.pageSize
             },
             type: "post",
             dataType: "json",
@@ -126,15 +128,17 @@
         this.dynamicDiv.css({'display': 'none', 'padding': '0 10px', 'font-style': 'italic', 'font-family': 'arial, sans-serif'})
         this.dynamicDiv.slideUp()
         $.ajax({
+          xhrFields:{
+            withCredentials:true
+          },
           url: Constant.path + "/feedback/selectByUserid",
           data: {
             currentPage: this.currentPage++,
-            pageSize: this.pageSize,
-            userId: 1
+            pageSize: this.pageSize
           },
           type: "post",
           dataType: "json",
-          async: false,
+          async: true,
           success: (response)=> {
             if(response.data.length != 0){
               this.list = this.list.concat(response.data)
