@@ -18,7 +18,7 @@
       methods: {
         subFB: function () {
           this.$indicator.open();
-          axios.post(
+          this.$ajax.post(
             Constant.path + '/feedback/addFeedback',
             {
                 suggestionid: this.suggestionId,
