@@ -40,8 +40,8 @@
                   duration: 1000
                 })
                 //重定向到原先的访问的页面
-                // this.$router.push(constant.path + this.$route.query.desPath)
-                location.href = constant.path + this.$route.query.desPath
+                this.$router.push(this.$route.query.to)
+                // location.href = constant.path + this.$route.query.to
               }else {
                 this.$toast({
                   message: data.message,

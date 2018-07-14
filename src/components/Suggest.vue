@@ -84,11 +84,8 @@
           });
           return false;
         }
-        $.ajax(
+        this.$ajax(
           {
-            xhrFields:{
-              withCredentials:true
-            },
             url: Constant.path + '/suggestion/addSugg',
             method: 'post',
             data: {
@@ -231,7 +228,9 @@
                 withCredentials: true
               },
               success:  (data)=> {
+                console.log(data.data.wavPath)
                 if(data.code == "200"){
+                  this.content = JSON.stringify(data)
                   this.wavPath = data.data.wavPath
                 }
               },

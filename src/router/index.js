@@ -19,22 +19,27 @@ export default new Router({
     },{
       path: '/test',
       name: 'test',
-      component: test
+      component: test,
+      meta: {requiresAuth: true}
     }, {
       path: '/Suggest',
       name: 'Suggest',
+      meta: {requiresAuth: true},
       component: Suggest
     }, {
       path: '/Reply',
       name: 'Reply',
+      meta: {requiresAuth: true},
       component: Reply
     }, {
       path: '/AdminPage',
       name: 'AdminPage',
+      meta: {requiresAuth: true},
       component: AdminPage
     }, {
       path: '/CommonUserPage',
       name: 'CommonUserPage',
+      meta: {requiresAuth: true},
       component: CommonUserPage
     }
   ]
