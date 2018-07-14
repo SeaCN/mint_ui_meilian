@@ -84,6 +84,7 @@
           });
           return false;
         }
+
         this.$ajax(
           {
             url: Constant.path + '/suggestion/addSugg',
@@ -214,7 +215,7 @@
         wx.uploadVoice({
           localId: this.voice.localId, // 需要上传的音频的本地ID，由stopRecord接口获得
           isShowProgressTips: 1, // 默认为1，显示进度提示
-          success: function (res) {
+          success: (res)=> {
             //把录音在微信服务器上的id（res.serverId）发送到自己的服务器供下载。
             $.ajax({
               xhrFields:{
@@ -228,10 +229,11 @@
                 withCredentials: true
               },
               success:  (data)=> {
-                console.log(data.data.wavPath)
                 if(data.code == "200"){
                   this.content = JSON.stringify(data)
                   this.wavPath = data.data.wavPath
+                  console.log("wavPath:" + data.data.wavPath)
+                  console.log("this.wavPath:" + this.wavPath)
                 }
               },
               error: function (xhr, errorType, error) {
