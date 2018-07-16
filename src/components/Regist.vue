@@ -11,7 +11,6 @@
 
 <script>
   import Constant from '../assets/constant.js'
-  import constant from "../assets/constant";
   export default {
     name: "Regist",
     data(){

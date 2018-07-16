@@ -6,12 +6,13 @@
     <mt-field type="textarea" rows="6" v-model="content" label="内容"></mt-field>
     <!--<mt-header title="上传图片"></mt-header>-->
 
-    <form action="" style="display:none">
+<!--    <form action="" style="display:none">
       <input type="file" id="upfile" @change="fileclick">
     </form>
     <div class="imgcontainer">
       <img :src="imgsrc" v-show="isshow" class="imgstyle" @click="handleClick"/>
-    </div>
+    </div>-->
+    <UploadImg v-on:receiveImg="receiveImg"></UploadImg>
     <mt-progress :value="progress" :barHeight="5">
       <div slot="start">0%</div>
       <div slot="end">100%</div>
@@ -28,14 +29,18 @@
   import upload from '../assets/upload.png'
   import Constant from '../assets/constant.js'
   import wx from 'weixin-js-sdk'
+  import UploadImg from '@/components/UploadImg'
 
   export default {
     name: "",
+    components: {
+      UploadImg
+    },
     data() {
       return {
         title: "",
         content: "",
-        imgsrc: upload,
+        img: "",
         isshow: true,
         START: null,
         END: null,
@@ -50,6 +55,9 @@
       }
     },
     methods: {
+      receiveImg: function (img) {
+        this.img = img
+      },
       handleClick: function () {
         var file = document.getElementById("upfile")
         file.click();
@@ -92,7 +100,7 @@
             data: {
               title: this.title,
               content: this.content,
-              img: this.imgsrc,
+              img: this.img,
               wavPath: this.wavPath
             }
           }
@@ -121,7 +129,7 @@
           }
         })
       },
-      getConfig: function () {
+      /*getConfig: function () {
         let url = location.href.split("#")[0]//获取锚点之前的链接
         $.ajax({
           xhrFields:{
@@ -154,7 +162,7 @@
             'translateVoice','uploadVoice']
         });
 
-      },
+      },*/
       /*按下，开始录音*/
       start: function () {this.content="开始录音！"
         event.preventDefault();
@@ -247,7 +255,7 @@
         });
       }
     },
-    mounted() {
+    /*mounted() {
       this.$nextTick(()=> {
         wx.ready(()=> {
           wx.onVoiceRecordEnd({
@@ -264,7 +272,7 @@
         });
         this.getConfig()
       })
-    }
+    }*/
   }
 </script>
 

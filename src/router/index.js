@@ -6,6 +6,7 @@ import AdminPage from '@/components/AdminPage'
 import Regist from '@/components/Regist'
 import test from '@/components/test'
 import CommonUserPage from '@/components/CommonUserPage'
+import UploadImg from '@/components/UploadImg'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       name: 'AdminPage',
       meta: {requiresAuth: true},
       component: AdminPage
+    },{
+      path: '/UploadImg',
+      name: 'UploadImg',
+      meta: {requiresAuth: true},
+      component: UploadImg
     }, {
       path: '/CommonUserPage',
       name: 'CommonUserPage',
