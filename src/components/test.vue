@@ -8,8 +8,10 @@
     <mt-tab-container v-model="selected" swipeable>
       <mt-tab-container-item id="1">
         <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore" :autoFill="autoFill">
-          <mt-cell v-for="item in list" :title="item+''" :key='item.id'>
-
+          <mt-cell v-for="item in list">
+              <!--<p>{{item.content}}</p>-->
+            <h1 slot="title">{{item.title}}</h1>
+            <p>{{item.content}}</p>
           </mt-cell>
         </mt-loadmore>
       </mt-tab-container-item>
@@ -29,9 +31,13 @@
       data(){
         return {
           selected: "1",
-          list: [1,2,3,4,5,6],
+          list: [
+            {title: "1", content:"oneadadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"},
+            {title: "2", content:"one"},
+            {title: "3", content:"one"}
+          ],
           allLoaded: false,
-          autoFill: false
+          autoFill: true
         }
       },
       methods: {

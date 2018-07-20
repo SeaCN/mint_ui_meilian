@@ -9,14 +9,8 @@
         <mt-loadmore :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore" :autoFill="autoFill">
           <mt-cell v-for="item in list" :key='item.id'
                          :title="item.title" :label="item.createTime"
-                         @click.native="showDetail"
+                         @click.native="showDetail(item)"
           >
-            <span style="font-size: 15px">by：{{item.nickname}}</span>
-
-            <span style="font-size: 10px; color:#ff7257" v-if="item.fcontent">/有回复<mt-badge type="error">1</mt-badge></span>
-            <input id="itemC" type="hidden" v-model="item.content">
-            <input id="itemI" type="hidden" v-model="item.img">
-            <input id="itemId" type="hidden" v-model="item.id">
           </mt-cell>
         </mt-loadmore>
       </mt-tab-container-item>
@@ -37,14 +31,57 @@
       },
       data() {
         return {
-          selected: "1",
+          selected: "-1",
           list: [],
           autoFill: false,
           allLoaded: false,
           currentPage: 1,
           pageSize: 10,
           dynamicDiv: {},
-          wrapperHeight: 0
+          wrapperHeight: 0,
+          item: {}
+        }
+      },
+      watch:{
+        selected: function (val, oldVal) {
+          if(val == 1 && this.list.length == 0){
+            this.dynamicDiv = $('<div class="animateDiv"></div>');
+            this.dynamicDiv.css({'display': 'none', 'padding': '0 10px', 'font-style': 'italic', 'font-family': 'arial, sans-serif'})
+            this.dynamicDiv.slideUp()
+            $.ajax({
+              xhrFields:{
+                withCredentials:true
+              },
+              url: Constant.path + "/suggestion/suggestionByPage",
+              data: {
+                currentPage: this.currentPage++,
+                pageSize: this.pageSize
+              },
+              type: "post",
+              dataType: "json",
+              async: true,
+              success: (response)=> {
+                if(response.data.length != 0){
+                  this.list = this.list.concat(response.data)
+                  if(response.data.length < this.pageSize){
+                    this.allLoaded = true
+                    this.$toast({
+                      message: '没有更多数据了',
+                      duration: 2000,
+                      className: "over"
+                    });
+                  }
+                }else{
+                  this.allLoaded = true
+                  this.$toast({
+                    message: '暂无数据',
+                    duration: 2000,
+                    className: "over"
+                  });
+                }
+              }
+            })
+          }
         }
       },
       methods: {
@@ -59,7 +96,7 @@
             xhrFields:{
               withCredentials:true
             },
-            url: Constant.path + "/feedback/selectByUserid",
+            url: Constant.path + "/suggestion/suggestionByPage",
             data: {
               currentPage: this.currentPage++,
               pageSize: this.pageSize
@@ -89,77 +126,16 @@
             }
           })
         },
-        showDetail: function (e) {
-          let closeA = $(e.target).closest('a.mint-cell')
-          if(closeA.find('div.animateDiv').length !== 0
-            && closeA.find('div.animateDiv').css('display') != 'none'){
-            this.dynamicDiv.hide()
-            return;
-          }
-          this.dynamicDiv.hide()
-          this.dynamicDiv.html("")
-          this.dynamicDiv.append($('<p></p>'))
-          this.dynamicDiv.find('p').html(closeA.find('#itemC').val())
-          let imgdata = closeA.find('#itemI').val()
-          this.dynamicDiv.find('p').after($("<p><img src='" + imgdata +"'/></p>"))
-          closeA.append(this.dynamicDiv)
-          this.dynamicDiv.fadeIn(1000)
-        },
-        fbShowDetail: function (e) {
-          let closeA = $(e.target).closest('a.mint-cell')
-          if(closeA.find('div.animateDiv').length !== 0
-            && closeA.find('div.animateDiv').css('display') != 'none'){
-            this.fbdynamicDiv.hide()
-            return;
-          }
-          this.fbdynamicDiv.hide()
-          this.fbdynamicDiv.html("")
-          this.fbdynamicDiv.append($('<p></p>'))
-          this.fbdynamicDiv.find('p').html(closeA.find('#itemCC').val())
-          let imgdata = closeA.find('#itemII').val()
-          this.fbdynamicDiv.find('p').after($("<p><img src='" + imgdata +"'/></p>"))
-          closeA.append(this.fbdynamicDiv)
-          this.fbdynamicDiv.fadeIn(1000)
+        showDetail: function (item) {
+          //打开一个新页面展示建议详情和回复信息
+          this.$router.push({
+            name: "SuggDetail",
+            params: item
+          })
         }
       },
       created: function () {
         this.selected = this.$route.query.selected
-        this.dynamicDiv = $('<div class="animateDiv"></div>');
-        this.dynamicDiv.css({'display': 'none', 'padding': '0 10px', 'font-style': 'italic', 'font-family': 'arial, sans-serif'})
-        this.dynamicDiv.slideUp()
-        $.ajax({
-          xhrFields:{
-            withCredentials:true
-          },
-          url: Constant.path + "/feedback/selectByUserid",
-          data: {
-            currentPage: this.currentPage++,
-            pageSize: this.pageSize
-          },
-          type: "post",
-          dataType: "json",
-          async: true,
-          success: (response)=> {
-            if(response.data.length != 0){
-              this.list = this.list.concat(response.data)
-              if(response.data.length < this.pageSize){
-                this.allLoaded = true
-                this.$toast({
-                  message: '没有更多数据了',
-                  duration: 2000,
-                  className: "over"
-                });
-              }
-            }else{
-              this.allLoaded = true
-              this.$toast({
-                message: '暂无数据',
-                duration: 2000,
-                className: "over"
-              });
-            }
-          }
-        })
       }
     }
 </script>
@@ -170,5 +146,11 @@
   }
   .commonUser{
     text-align: left;
+  }
+  .img{
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
   }
 </style>

@@ -7,6 +7,7 @@ import Regist from '@/components/Regist'
 import test from '@/components/test'
 import CommonUserPage from '@/components/CommonUserPage'
 import UploadImg from '@/components/UploadImg'
+import SuggDetail from '@/components/SuggDetail'
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ export default new Router({
       name: 'CommonUserPage',
       meta: {requiresAuth: true},
       component: CommonUserPage
+    }, {
+      path: '/SuggDetail',
+      name: 'SuggDetail',
+      meta: {requiresAuth: true},
+      component: SuggDetail
     }
   ]
 })

@@ -1,26 +1,19 @@
 <template>
   <div class="suggest">
-    <!--<mt-header title="请输入标题"></mt-header>-->
-    <mt-field type="input" v-model="title" label="标题"></mt-field>
-    <!--<mt-header title="请输入内容"></mt-header>-->
-    <mt-field type="textarea" rows="6" v-model="content" label="内容"></mt-field>
-    <!--<mt-header title="上传图片"></mt-header>-->
 
-<!--    <form action="" style="display:none">
-      <input type="file" id="upfile" @change="fileclick">
-    </form>
-    <div class="imgcontainer">
-      <img :src="imgsrc" v-show="isshow" class="imgstyle" @click="handleClick"/>
-    </div>-->
+    <mt-field type="input" v-model="title" placeholder="请输入标题"></mt-field>
+
+    <mt-field type="textarea" rows="4" v-model="content" placeholder="请输入建议内容"></mt-field>
+
     <UploadImg v-on:receiveImg="receiveImg"></UploadImg>
+
     <mt-progress :value="progress" :barHeight="5">
       <div slot="start">0%</div>
       <div slot="end">100%</div>
     </mt-progress>
-    <!--播放录音-->
-
     <mt-button type="default" plain size="normal" @touchstart.native="start" @touchend.native="end"> <span class="icon icon-mic"></span>录音 </mt-button>
     <mt-button type="default" plain size="normal"  @click.native="playAudio"> <span class="icon icon-play2"></span>试听 </mt-button>
+
     <mt-button type="primary" size="large" @click.native="submit">提交</mt-button>
   </div>
 </template>
@@ -129,42 +122,8 @@
           }
         })
       },
-      /*getConfig: function () {
-        let url = location.href.split("#")[0]//获取锚点之前的链接
-        $.ajax({
-          xhrFields:{
-            withCredentials:true
-          },
-          url: Constant.path + "/jssdk/sign",
-          data: {
-            url: url
-          },
-          method: 'post',
-          async: false,
-          dataType: "json",
-          success: (response) => {
-            let res = response.data;
-            this.wxInit(res);
-          }
-        })
-      },
-      wxInit: function (res) {
-        let url = location.href.split("#")[0]//获取锚点之前的链接
-        wx.config({
-          debug: false,
-          appId: res.appId,
-          timestamp: res.timestamp,
-          nonceStr: res.noncestr,
-          signature: res.sign,
-          // jsApiList: constant.jsApiList
-          jsApiList: ['startRecord','stopRecord',
-            'onVoiceRecordEnd','playVoice','pauseVoice','stopVoice',
-            'translateVoice','uploadVoice']
-        });
-
-      },*/
       /*按下，开始录音*/
-      start: function () {this.content="开始录音！"
+      start: function () {
         event.preventDefault();
         this.START = new Date().getTime();
         this.recordTimer = setTimeout(()=> {
@@ -186,7 +145,7 @@
         }, 300);
       },
       /*松开，停止录音*/
-      end: function () {this.content="触发停止！"
+      end: function () {
         event.preventDefault();
         this.END = new Date().getTime();
         if ((this.END - this.START) < 300) {
@@ -210,7 +169,6 @@
       },
       /*播放录音*/
       playAudio: function () {
-        this.content='begin play...'
         if(this.voice.localId){
           wx.playVoice({
             localId: this.voice.localId // 需要播放的音频的本地ID，由stopRecord接口获得
@@ -238,7 +196,6 @@
               },
               success:  (data)=> {
                 if(data.code == "200"){
-                  this.content = JSON.stringify(data)
                   this.wavPath = data.data.wavPath
                   console.log("wavPath:" + data.data.wavPath)
                   console.log("this.wavPath:" + this.wavPath)
@@ -254,25 +211,7 @@
           }
         });
       }
-    },
-    /*mounted() {
-      this.$nextTick(()=> {
-        wx.ready(()=> {
-          wx.onVoiceRecordEnd({
-            // 录音时间超过一分钟没有停止的时候会执行 complete 回调
-            complete: (res)=> {
-              this.voiceText = "重新录音..."
-              this.voice.localId = res.localId;
-              clearTimeout(this.progresshandler)//停止录音进度条
-            }
-          });
-        })
-        wx.error((res)=> {
-          this.content="wx.error:"+JSON.stringify(res)
-        });
-        this.getConfig()
-      })
-    }*/
+    }
   }
 </script>
 
